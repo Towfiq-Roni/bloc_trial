@@ -1,34 +1,37 @@
 import 'package:bloc_trial/Widgets/list_view.dart';
+
 import 'package:bloc_trial/bloc/bloc_exports.dart';
+import 'package:bloc_trial/bloc/tasks_bloc/tasks_event.dart';
 import 'package:bloc_trial/bloc/tasks_bloc/tasks_state.dart';
+import 'package:bloc_trial/models/tasks_model.dart';
+import 'package:bloc_trial/screens/add_task_screen.dart';
 import 'package:bloc_trial/screens/navigation_drawer.dart';
+
+// import 'package:bloc_trial/models/tasks_model.dart';
 import 'package:flutter/material.dart';
 
-class RecycleBin extends StatelessWidget {
-  const RecycleBin({Key? key}) : super(key: key);
+class PendingTasksScreen extends StatelessWidget {
+  const PendingTasksScreen({Key? key}) : super(key: key);
 
-  static const id = 'recycle_bin';
+  static const id = 'tasks_screen';
 
+  // TextEditingController titleController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TasksBloc, TasksState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Trash'),
-          ),
-          drawer: const NavigateDrawer(),
-          body: Column(
+    return BlocBuilder<TasksBloc, TasksState>(builder: (context, state) {
+      List<Task> tasksList = state.pendingTasks;
+      return SingleChildScrollView(
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Center(
                 child: Chip(
                   label: Text(
-                    'Tasks: ${state.removedTasks.length}',
+                    'Tasks: ${state.pendingTasks.length}',
                   ),
                 ),
               ),
-              TasksList(tasksList: state.removedTasks),
+              TasksList(tasksList: tasksList),
               // Expanded(
               //   child: ListView.builder(
               //     itemCount: tasksList.length,
@@ -45,8 +48,14 @@ class RecycleBin extends StatelessWidget {
               // )
             ],
           ),
-        );
-      }
-    );
+      );
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     _addTask(context);
+        //   },
+        //   tooltip: 'Add Task',
+        //   child: const Icon(Icons.add),
+        // ),
+    });
   }
 }
