@@ -1,5 +1,6 @@
 import 'package:bloc_trial/Widgets/list_view.dart';
 import 'package:bloc_trial/bloc/bloc_exports.dart';
+import 'package:bloc_trial/bloc/tasks_bloc/tasks_event.dart';
 import 'package:bloc_trial/bloc/tasks_bloc/tasks_state.dart';
 import 'package:bloc_trial/screens/navigation_drawer.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,16 @@ class RecycleBin extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Trash'),
+            actions: [
+              PopupMenuItem(
+                  child: TextButton.icon(
+                      onPressed: null,
+                  icon: const Icon(Icons.delete_forever),
+                      label: const Text('Delete All Tasks')
+                  ),
+                onTap: () => context.read<TasksBloc>().add(DeleteAllTask()),
+              ),
+            ],
           ),
           drawer: const NavigateDrawer(),
           body: Column(

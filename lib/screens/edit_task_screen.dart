@@ -5,34 +5,36 @@ import 'package:bloc_trial/services/guid_gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({Key? key}) : super(key: key);
+class EditTaskScreen extends StatelessWidget {
+  final Task oldTask;
+  const EditTaskScreen({Key? key, required this.oldTask,})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController titleController = TextEditingController();
-    TextEditingController descriptionController = TextEditingController();
-    String? title;
-    String? description;
+    TextEditingController titleController = TextEditingController(text: oldTask.title);
+    TextEditingController descriptionController = TextEditingController(text: oldTask.description);
+    // String? title;
+    // String? description;
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
           const Text(
-            'Add Task',
+            'Edit Task',
             style: TextStyle(fontSize: 20),
           ),
           const SizedBox(
             height: 10,
           ),
           TextField(
-            onChanged: (text){
-              // context.read<TasksBloc>().add(OnTitleChanged(title: text));
+            // onChanged: (text){
+            //   context.read<TasksBloc>().add(OnTitleChanged(title: text));
               // context.read<Task>().title;
-              title = text;
-            },
+              // title = text;
+            // },
             autofocus: true,
-            // controller: titleController,
+            controller: titleController,
             decoration: const InputDecoration(
               label: Text('Title'),
               border: OutlineInputBorder(),
@@ -40,13 +42,13 @@ class AddTaskScreen extends StatelessWidget {
           ),
           const Divider(),
           TextField(
-            onChanged: (text){
-              // context.read<TasksBloc>().add(OnDescriptionChanged(description: text));
+            // onChanged: (text){
+            //   context.read<TasksBloc>().add(OnDescriptionChanged(description: text));
               // context.read<Task>().description;
-              description = text;
-            },
+              // description = text;
+            // },
             autofocus: true,
-            // controller: descriptionController,
+            controller: descriptionController,
             minLines: 2,
             maxLines: 5,
             decoration: const InputDecoration(
@@ -64,19 +66,22 @@ class AddTaskScreen extends StatelessWidget {
                   child: const Text('Cancel')
               ),
               ElevatedButton(
-                  onPressed: () {
-                    var task = Task(
-                        // title: titleController.text,
-                        title: title!,
-                      id: GuidGen.generate(),
-                      // description: descriptionController.text,
-                      description: description,
-                      date: DateTime.now().toString(),
-                    );
-                    context.read<TasksBloc>().add(AddTask(task: task));
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Add'),
+                onPressed: () {
+                  var editedTask = Task(
+                    title: titleController.text,
+                    // title: title!,
+                    // description: description,
+                    id: oldTask.id,
+                    description: descriptionController.text,
+                    date: DateTime.now().toString(),
+                    isDone: false,
+                    isFavorite: oldTask.isFavorite,
+                  );
+                  context.read<TasksBloc>().add(
+                      EditTask(oldTask: oldTask, newTask: editedTask,));
+                  Navigator.pop(context);
+                },
+                child: const Text('Save'),
               ),
             ],
           ),
